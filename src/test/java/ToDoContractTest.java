@@ -24,8 +24,8 @@ public class ToDoContractTest {
     private HttpClient client;
 
     @BeforeEach
-    public void setUp(){
-        client =  HttpClientBuilder
+    public void setUp() {
+        client = HttpClientBuilder
                 .create()
                 .addInterceptorLast(new MyRequestInterceptor())
                 .addInterceptorFirst(new MyResponseInterceptor())
@@ -87,9 +87,9 @@ public class ToDoContractTest {
         // создать задачу, которую будем удалять
         HttpResponse newTask = createNewTask();
         String body = EntityUtils.toString(newTask.getEntity());
-        String id = "/" +body.substring(6, 11);
+        String id = "/" + body.substring(6, 11);
 
-        HttpDelete deleteTaskReq = new HttpDelete(URL +  id);
+        HttpDelete deleteTaskReq = new HttpDelete(URL + id);
         HttpResponse response = client.execute(deleteTaskReq);
         assertEquals(204, response.getStatusLine().getStatusCode());
         assertEquals(1, response.getHeaders("Content-Length").length);

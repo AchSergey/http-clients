@@ -7,18 +7,15 @@ import ru.inno.todo.model.CreateToDo;
 import ru.inno.todo.model.ToDoItem;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ToDoBusinessTest {
-    ToDoClient client;
+    private ToDoClient client;
 
     @BeforeEach
-    public void setUp() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    public void setUp() {
         client = new ToDoClientApache("https://todo-app-sky.herokuapp.com");
     }
 
@@ -45,7 +42,8 @@ public class ToDoBusinessTest {
         assertEquals(1, listAfter.size() - listBefore.size());
 
         // проверить еще и по id
-        ToDoItem single  = client.getById(newItem.getId());
+        ToDoItem single = client.getById(newItem.getId());
+        assertEquals(title, single.getTitle());
     }
 
 }

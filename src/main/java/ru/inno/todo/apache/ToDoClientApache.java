@@ -14,9 +14,6 @@ import ru.inno.todo.model.CreateToDo;
 import ru.inno.todo.model.ToDoItem;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class ToDoClientApache implements ToDoClient {
@@ -25,7 +22,7 @@ public class ToDoClientApache implements ToDoClient {
 
     private final ObjectMapper mapper;
 
-    public ToDoClientApache(String URL) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    public ToDoClientApache(String URL) {
         this.URL = URL;
         this.httpClient = HttpClientBuilder
                 .create()

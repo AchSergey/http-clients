@@ -6,10 +6,11 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MyResponseInterceptor implements HttpResponseInterceptor {
     @Override
-    public void process(HttpResponse httpResponse, HttpContext httpContext) throws HttpException, IOException {
+    public void process(HttpResponse httpResponse, HttpContext httpContext) throws IOException {
         System.out.println(httpResponse.getStatusLine());
         for (Header header : httpResponse.getAllHeaders()) {
             System.out.println(header);
