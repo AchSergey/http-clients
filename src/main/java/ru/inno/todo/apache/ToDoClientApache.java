@@ -2,22 +2,17 @@ package ru.inno.todo.apache;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import ru.inno.todo.ToDoClient;
 import ru.inno.todo.model.CreateToDo;
 import ru.inno.todo.model.ToDoItem;
 
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -32,17 +27,10 @@ public class ToDoClientApache implements ToDoClient {
 
     public ToDoClientApache(String URL) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         this.URL = URL;
-
-        SSLContextBuilder builder = new SSLContextBuilder();
-        builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
-
         this.httpClient = HttpClientBuilder
                 .create()
                 .addInterceptorLast(new MyRequestInterceptor())
                 .addInterceptorFirst(new MyResponseInterceptor())
-                .setProxy(new HttpHost("localhost", 5559))
-                .setSSLSocketFactory(sslsf)
                 .build();
         this.mapper = new ObjectMapper();
     }

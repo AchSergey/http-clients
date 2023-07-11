@@ -1,7 +1,6 @@
 package ru.inno.todo.apache;
 
 import org.apache.http.*;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -27,9 +26,5 @@ public class MyResponseInterceptor implements HttpResponseInterceptor {
             StringEntity newBody = new StringEntity(body);
             httpResponse.setEntity(newBody);
         }
-        // Можем модифицировать ответ
-//        httpResponse.removeHeaders("Content-Length"); //2
-//        httpResponse.addHeader("Content-Length", "0");
-
     }
 }
