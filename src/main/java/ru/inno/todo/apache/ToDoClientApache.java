@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -35,11 +36,10 @@ public class ToDoClientApache implements ToDoClient {
     @Override
     public List<ToDoItem> getAll() throws IOException {
         HttpGet request = new HttpGet(URL);
-        HttpResponse listAsString = httpClient.execute(request);
+        HttpResponse response = httpClient.execute(request);
 
-        List<ToDoItem> list = mapper.readValue(EntityUtils.toString(listAsString.getEntity()), new TypeReference<>() {
+        return mapper.readValue(EntityUtils.toString(response.getEntity()), new TypeReference<>() {
         });
-        return list;
     }
 
     @Override
@@ -50,11 +50,12 @@ public class ToDoClientApache implements ToDoClient {
     @Override
     public ToDoItem create(CreateToDo createToDo) throws IOException {
         HttpPost request = new HttpPost(URL);
-        String s = mapper.writeValueAsString(createToDo);
-        StringEntity entity = new StringEntity(s);
+        String body = mapper.writeValueAsString(createToDo);
+        StringEntity entity = new StringEntity(body);
         request.setEntity(entity);
-        HttpResponse newItemTyped = httpClient.execute(request);
-        return mapper.readValue(EntityUtils.toString(newItemTyped.getEntity()), ToDoItem.class);
+        HttpResponse response = httpClient.execute(request);
+
+        return mapper.readValue(EntityUtils.toString(response.getEntity()), ToDoItem.class);
     }
 
     @Override
@@ -73,7 +74,8 @@ public class ToDoClientApache implements ToDoClient {
     }
 
     @Override
-    public void deleteAll() {
-
+    public void deleteAll() throws IOException {
+        HttpDelete request = new HttpDelete(URL);
+        httpClient.execute(request);
     }
 }

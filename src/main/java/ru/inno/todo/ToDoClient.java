@@ -20,5 +20,5 @@ public interface ToDoClient {
 
     ToDoItem markCompleted(int id, boolean completed);
 
-    void deleteAll();
+    void deleteAll() throws IOException;
 }
