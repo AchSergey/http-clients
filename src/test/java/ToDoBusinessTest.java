@@ -7,6 +7,9 @@ import ru.inno.todo.model.CreateToDo;
 import ru.inno.todo.model.ToDoItem;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +18,7 @@ public class ToDoBusinessTest {
     ToDoClient client;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         client = new ToDoClientApache("https://todo-app-sky.herokuapp.com");
     }
 
