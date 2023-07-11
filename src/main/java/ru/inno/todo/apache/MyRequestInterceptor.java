@@ -1,12 +1,13 @@
 package ru.inno.todo.apache;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class MyRequestInterceptor implements HttpRequestInterceptor {
     @Override
