@@ -12,6 +12,7 @@ import java.io.IOException;
 public class MyRequestInterceptor implements HttpRequestInterceptor {
     @Override
     public void process(HttpRequest httpRequest, HttpContext httpContext) throws IOException {
+        System.out.println("===== REQUEST =====");
         System.out.println(httpRequest.getRequestLine());
         for (Header header : httpRequest.getAllHeaders()) {
             System.out.println(header);

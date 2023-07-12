@@ -1,6 +1,5 @@
 package ru.inno.todo;
 
-import ru.inno.todo.model.CreateToDo;
 import ru.inno.todo.model.ToDoItem;
 
 import java.io.IOException;
@@ -10,15 +9,15 @@ public interface ToDoClient {
 
     List<ToDoItem> getAll() throws IOException;
 
-    ToDoItem getById(int id);
+    ToDoItem getById(int id) throws IOException;
 
-    ToDoItem create(CreateToDo createToDo) throws IOException;
+    ToDoItem create(String title) throws IOException;
 
-    void deleteById(int id);
+    void deleteById(int id) throws IOException;
 
-    ToDoItem renameById(int id, String newName);
+    ToDoItem renameById(int id, String newName) throws IOException;
 
-    ToDoItem markCompleted(int id, boolean completed);
+    ToDoItem markCompleted(int id, boolean completed) throws IOException;
 
     void deleteAll() throws IOException;
 }

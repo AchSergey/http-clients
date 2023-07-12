@@ -6,7 +6,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -43,15 +45,20 @@ public class ToDoClientApache implements ToDoClient {
     }
 
     @Override
-    public ToDoItem getById(int id) {
-        return null;
+    public ToDoItem getById(int id) throws IOException {
+        HttpGet request = new HttpGet(URL + "/" + id);
+        HttpResponse response = httpClient.execute(request);
+
+        return mapper.readValue(EntityUtils.toString(response.getEntity()), ToDoItem.class);
     }
 
     @Override
-    public ToDoItem create(CreateToDo createToDo) throws IOException {
+    public ToDoItem create(String title) throws IOException {
+        CreateToDo createToDo = new CreateToDo();
+        createToDo.setTitle(title);
         HttpPost request = new HttpPost(URL);
         String body = mapper.writeValueAsString(createToDo);
-        StringEntity entity = new StringEntity(body);
+        StringEntity entity = new StringEntity(body, ContentType.APPLICATION_JSON);
         request.setEntity(entity);
         HttpResponse response = httpClient.execute(request);
 
@@ -59,18 +66,31 @@ public class ToDoClientApache implements ToDoClient {
     }
 
     @Override
-    public void deleteById(int id) {
-
+    public void deleteById(int id) throws IOException {
+        HttpDelete request = new HttpDelete(URL + "/" + id);
+        httpClient.execute(request);
     }
 
     @Override
-    public ToDoItem renameById(int id, String newName) {
-        return null;
+    public ToDoItem renameById(int id, String newName) throws IOException {
+        HttpPatch request = new HttpPatch(URL + "/" + id);
+
+        StringEntity entity = new StringEntity("{\"title\": \"" + newName + "\"}", ContentType.APPLICATION_JSON);
+        request.setEntity(entity);
+        HttpResponse response = httpClient.execute(request);
+
+        return mapper.readValue(EntityUtils.toString(response.getEntity()), ToDoItem.class);
     }
 
     @Override
-    public ToDoItem markCompleted(int id, boolean completed) {
-        return null;
+    public ToDoItem markCompleted(int id, boolean completed) throws IOException {
+        HttpPatch request = new HttpPatch(URL + "/" + id);
+
+        StringEntity entity = new StringEntity("{\"completed\": " + completed + "}", ContentType.APPLICATION_JSON);
+        request.setEntity(entity);
+        HttpResponse response = httpClient.execute(request);
+
+        return mapper.readValue(EntityUtils.toString(response.getEntity()), ToDoItem.class);
     }
 
     @Override

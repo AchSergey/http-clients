@@ -18,7 +18,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ToDoContractTest {
+public class ApacheHttpClientContractTest {
     private static final String URL = "https://todo-app-sky.herokuapp.com";
 
     private HttpClient client;

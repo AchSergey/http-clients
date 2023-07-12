@@ -1,9 +1,10 @@
+import extentions.ToDoProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ru.inno.todo.ToDoClient;
 import ru.inno.todo.apache.ToDoClientApache;
-import ru.inno.todo.model.CreateToDo;
 import ru.inno.todo.model.ToDoItem;
 
 import java.io.IOException;
@@ -25,17 +26,15 @@ public class ToDoBusinessTest {
         // получить список задач
         List<ToDoItem> listBefore = client.getAll();
         // создать задачу
-        CreateToDo todo = new CreateToDo();
         String title = "My super task";
-        todo.setTitle(title);
-        ToDoItem newItem = client.create(todo);
+        ToDoItem newItem = client.create(title);
 
         // проверить, что задача отображается в списке
         assertFalse(newItem.getUrl().isBlank());
         assertFalse(newItem.isCompleted());
         assertTrue(newItem.getId() > 0);
         assertEquals(title, newItem.getTitle());
-        // TODO: bug report. Oreder is null
+        // TODO: bug report. Order is null
         assertEquals(0, newItem.getOrder());
         // задач стало на 1 больше
         List<ToDoItem> listAfter = client.getAll();
@@ -46,4 +45,22 @@ public class ToDoBusinessTest {
         assertEquals(title, single.getTitle());
     }
 
+
+    @Test
+    @ExtendWith(ToDoProvider.class)
+    public void shouldRename(ToDoItem created) throws IOException {
+        // rename
+        String myNewTitle = "My new title";
+        ToDoItem updated = client.renameById(created.getId(), myNewTitle);
+
+        // get -> assert
+        ToDoItem item = client.getById(updated.getId());
+
+        assertEquals(myNewTitle, item.getTitle());
+        assertEquals(myNewTitle, updated.getTitle());
+        assertEquals(created.getId(), item.getId());
+        assertEquals(created.getUrl(), item.getUrl());
+        assertEquals(created.getOrder(), item.getOrder());
+        assertEquals(created.isCompleted(), item.isCompleted());
+    }
 }
