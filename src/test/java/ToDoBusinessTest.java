@@ -1,10 +1,9 @@
+import extentions.ToDoClientProvider;
 import extentions.ToDoProvider;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.inno.todo.ToDoClient;
-import ru.inno.todo.apache.ToDoClientApache;
 import ru.inno.todo.model.ToDoItem;
 
 import java.io.IOException;
@@ -12,17 +11,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(ToDoClientProvider.class)
 public class ToDoBusinessTest {
-    private ToDoClient client;
-
-    @BeforeEach
-    public void setUp() {
-        client = new ToDoClientApache("https://todo-app-sky.herokuapp.com");
-    }
 
     @Test
     @DisplayName("Проверяем, что задача создается")
-    public void shouldCreateTask() throws IOException {
+    public void shouldCreateTask(ToDoClient client) throws IOException {
         // получить список задач
         List<ToDoItem> listBefore = client.getAll();
         // создать задачу
@@ -48,7 +42,7 @@ public class ToDoBusinessTest {
 
     @Test
     @ExtendWith(ToDoProvider.class)
-    public void shouldRename(ToDoItem created) throws IOException {
+    public void shouldRename(ToDoClient client, ToDoItem created) throws IOException {
         // rename
         String myNewTitle = "My new title";
         ToDoItem updated = client.renameById(created.getId(), myNewTitle);

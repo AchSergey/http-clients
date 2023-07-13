@@ -11,7 +11,6 @@ public class ToDoProvider implements ParameterResolver, AfterEachCallback {
     private final ToDoClient client = new ToDoClientApache("https://todo-app-sky.herokuapp.com");
 
     private int id;
-
     // генерить ли значение параметра?
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
