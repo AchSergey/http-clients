@@ -3,6 +3,7 @@ package ru.inno.todo.okhttp;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okio.Buffer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -14,8 +15,17 @@ public class MyInterceptor implements Interceptor {
     @NotNull
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {
+        processRequest(chain.request());
+
+        Response response = chain.proceed(chain.request());
+
+        processResponse(response);
+
+        return response;
+    }
+
+    private void processRequest(Request request) throws IOException {
         System.out.println("===== REQUEST =====");
-        Request request = chain.request();
         System.out.println(request.method() + " " + request.url());
         Map<String, List<String>> headers = request.headers().toMultimap();
         for (String key : headers.keySet()) {
@@ -23,11 +33,15 @@ public class MyInterceptor implements Interceptor {
                 System.out.println(key + " : " + value);
             }
         }
-        if (request.method().equals("POST") || request.method().equals("PATCH")) {
-            // TODO: read req body
+        if (request.body() != null) {
+            Buffer buffer = new Buffer();
+            request.body().writeTo(buffer);
+            String body = buffer.readUtf8();
+            System.out.println(body);
         }
+    }
 
-        Response response = chain.proceed(request);
+    private void processResponse(Response response) throws IOException {
         System.out.println("===== RESPONSE =====");
         System.out.println(response.code());
         Map<String, List<String>> respHeaders = response.headers().toMultimap();
@@ -40,13 +54,11 @@ public class MyInterceptor implements Interceptor {
         long length = Long.parseLong(Objects.requireNonNull(response.header("Content-Length")));
         if (length > 0) {
             System.out.println("BODY:");
-
             String s = response.peekBody(length).string();
             System.out.println(s);
         } else {
             System.out.println("NO BODY");
         }
-
-        return response;
     }
+
 }
